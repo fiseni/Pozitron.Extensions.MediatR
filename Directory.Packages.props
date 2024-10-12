@@ -6,6 +6,7 @@
 
   <ItemGroup Label="Package dependencies">
     <PackageVersion Include="MediatR" Version="12.4.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup Label="Test projects dependencies">
