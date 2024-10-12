@@ -5,6 +5,22 @@ VisualStudioVersion = 17.12.35309.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pozitron.Extensions.MediatR", "src\Pozitron.Extensions.MediatR\Pozitron.Extensions.MediatR.csproj", "{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B0981FD1-FB8B-4C25-B8AE-3E70E6B99B07}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		clean.sh = clean.sh
+		Directory.Packages.props = Directory.Packages.props
+		exclusion.dic = exclusion.dic
+		LICENSE.txt = LICENSE.txt
+		readme-nuget.md = readme-nuget.md
+		README.md = README.md
+		run-tests.sh = run-tests.sh
+		setup-sqllocaldb.ps1 = setup-sqllocaldb.ps1
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pozitron.Extensions.MediatR.Tests", "tests\Pozitron.Extensions.MediatR.Tests\Pozitron.Extensions.MediatR.Tests.csproj", "{D8EE7689-2649-446D-B9CE-382A4D7A96BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +31,10 @@ Global
 		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8EE7689-2649-446D-B9CE-382A4D7A96BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8EE7689-2649-446D-B9CE-382A4D7A96BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8EE7689-2649-446D-B9CE-382A4D7A96BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8EE7689-2649-446D-B9CE-382A4D7A96BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
