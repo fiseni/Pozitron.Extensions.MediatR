@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35309.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pozitron.Extensions.MediatR", "src\Pozitron.Extensions.MediatR\Pozitron.Extensions.MediatR.csproj", "{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BD9BB5E-E31E-4F9D-94BF-BDD6C36CACBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFD7A108-81EF-4536-9BB8-8CAA2DE41EA2}
+	EndGlobalSection
+EndGlobal
