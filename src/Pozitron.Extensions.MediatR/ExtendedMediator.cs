@@ -23,19 +23,17 @@ internal class ExtendedMediator(
     public Task Publish<TNotification>(
         TNotification notification,
         PublishStrategy strategy,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
         where TNotification : INotification
     {
-        if (strategy == PublishStrategy.Default)
+        if (_publishers.TryGetValue(strategy, out (INotificationPublisher Publisher, bool NoWaitMode) item))
         {
-            return Publish(notification, cancellationToken);
+            return item.NoWaitMode
+                ? PublishNoWait(_serviceScopeFactory, notification, item.Publisher, cancellationToken)
+                : Publish(_serviceProvider, notification, item.Publisher, cancellationToken);
         }
 
-        var (publisher, noWaitMode) = _publishers[strategy];
-
-        return noWaitMode
-            ? PublishNoWait(_serviceScopeFactory, notification, publisher, cancellationToken)
-            : Publish(_serviceProvider, notification, publisher, cancellationToken);
+        return Publish(notification, cancellationToken);
     }
 
     private static Task Publish<TNotification>(

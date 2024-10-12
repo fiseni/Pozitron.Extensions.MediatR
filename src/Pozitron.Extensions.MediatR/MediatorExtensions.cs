@@ -9,7 +9,7 @@ public static class MediatorExtensions
         this IPublisher publisher,
         TNotification notification,
         PublishStrategy strategy,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
         where TNotification : INotification
     {
         return publisher is ExtendedMediator customMediator
