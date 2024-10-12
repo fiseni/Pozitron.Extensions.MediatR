@@ -5,7 +5,7 @@ namespace MediatR;
 
 internal class ExtendedMediator(
     IServiceScopeFactory serviceScopeFactory,
-    IServiceProvider serviceProvider) 
+    IServiceProvider serviceProvider)
     : Mediator(serviceProvider)
 {
     private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
@@ -43,9 +43,7 @@ internal class ExtendedMediator(
         TNotification notification,
         INotificationPublisher publisher,
         CancellationToken cancellationToken) where TNotification : INotification
-    {
-        return new Mediator(serviceProvider, publisher).Publish(notification, cancellationToken);
-    }
+        => new Mediator(serviceProvider, publisher).Publish(notification, cancellationToken);
 
     private static Task PublishNoWait<TNotification>(
         IServiceScopeFactory serviceScopeFactory,

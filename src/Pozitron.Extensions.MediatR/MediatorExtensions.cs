@@ -14,7 +14,7 @@ public static class MediatorExtensions
     {
         return publisher is ExtendedMediator customMediator
             ? customMediator.Publish(notification, strategy, cancellationToken)
-            : throw new NotSupportedException("The extended mediator implementation is not registered! Register it with IServiceCollection.AddExtendedMediatR extension.");
+            : throw new NotSupportedException("The extended mediator implementation is not registered! Register it with the IServiceCollection.AddExtendedMediatR extensions.");
     }
 
     public static IServiceCollection AddExtendedMediatR(
