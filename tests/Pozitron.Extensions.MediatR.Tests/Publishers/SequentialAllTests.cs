@@ -36,13 +36,39 @@ public class SequentialAllTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
-        await sut.Should().ThrowAsync<NotImplementedException>();
+        var ex = await sut.Should().ThrowExactlyAsync<AggregateException>();
 
         _queue.Write(0);
         await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
 
+        ex.Which.InnerExceptions.Should().HaveCount(3);
+        ex.Which.InnerExceptions[0].Should().BeOfType<NotImplementedException>();
+        ex.Which.InnerExceptions[1].Should().BeOfType<NotSupportedException>();
+        ex.Which.InnerExceptions[2].Should().BeOfType<Exception>();
+
         var result = _queue.GetValues();
         result.Should().Equal(Pong1.Id, Pong3.Id, 0);
+    }
+
+    [Fact]
+    public async Task FlattensAggregateException()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(_queue);
+        services.AddExtendedMediatR(x =>
+        {
+            x.RegisterServicesFromAssemblyContaining<Ping>();
+            x.TypeEvaluator = type => type.Name is nameof(Pong4);
+        });
+        using var scope = services.BuildServiceProvider().CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+        var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
+        var ex = await sut.Should().ThrowExactlyAsync<AggregateException>();
+
+        ex.Which.InnerExceptions.Should().HaveCount(2);
+        ex.Which.InnerExceptions[0].Should().BeOfType<NotSupportedException>();
+        ex.Which.InnerExceptions[1].Should().BeOfType<Exception>();
     }
 
     public record Ping() : INotification { }
@@ -70,6 +96,14 @@ public class SequentialAllTests
         {
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
+        }
+    }
+    public class Pong4() : INotificationHandler<Ping>
+    {
+        public async Task Handle(Ping notification, CancellationToken cancellationToken)
+        {
+            await Task.Delay(10, cancellationToken);
+            throw new AggregateException(new NotSupportedException(), new Exception());
         }
     }
 }

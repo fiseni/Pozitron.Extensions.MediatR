@@ -36,7 +36,7 @@ public class SequentialTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.Sequential);
-        await sut.Should().ThrowAsync<NotImplementedException>();
+        await sut.Should().ThrowExactlyAsync<NotImplementedException>();
 
         _queue.Write(0);
         await _queue.WaitForCompletion(expectedMessages: 2, timeoutInMilliseconds: 500);
