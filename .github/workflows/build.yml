@@ -1,0 +1,47 @@
+name: Full Build
+
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x
+    - name: Build
+      run: dotnet build --configuration Release
+    - name: Test
+      run: dotnet test --configuration Release --no-build --no-restore --collect:"XPlat Code Coverage"
+    - name: ReportGenerator
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+      with:
+        reports: tests/**/coverage.cobertura.xml
+        targetdir: ${{ runner.temp }}/coveragereport
+        reporttypes: 'Html;Badges;MarkdownSummaryGithub'
+        assemblyfilters: -*Tests*
+    - name: Publish coverage report in build summary
+      run: cat '${{ runner.temp }}'/coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+      shell: bash
+    - name: Create coverage-reports branch and push content
+      run: |
+        git fetch
+        git checkout coverage-reports || git checkout --orphan coverage-reports
+        git reset --hard
+        git clean -fd
+        cp -rp '${{ runner.temp }}'/coveragereport/* ./
+        echo "extensionsmediatr.fiseni.com" > CNAME
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "Update coverage reports [skip ci]" || echo "No changes to commit"
+        git push origin coverage-reports --force
+      shell: bash
