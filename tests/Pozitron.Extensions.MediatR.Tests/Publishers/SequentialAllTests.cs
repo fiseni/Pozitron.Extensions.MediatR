@@ -1,13 +1,49 @@
-﻿using FluentAssertions;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-
-namespace Tests;
+﻿namespace Tests;
 
 public class SequentialAllTests
 {
     private readonly TestQueue<int> _queue = new();
+
+    [Fact]
+    public async Task ExecutesAllHandlersSequentially()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(_queue);
+        services.AddExtendedMediatR(x =>
+        {
+            x.RegisterServicesFromAssemblyContaining<Ping>();
+            x.TypeEvaluator = type => type.Name is (nameof(Pong1) or nameof(Pong3));
+        });
+        using var scope = services.BuildServiceProvider().CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+        await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
+
+        _queue.Write(0);
+        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
+
+        var result = _queue.GetValues();
+        result.Should().Equal(Pong1.Id, Pong3.Id, 0);
+    }
+
+    [Fact]
+    public async Task ContinueOnException()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(_queue);
+        services.AddExtendedMediatR(typeof(Ping));
+        using var scope = services.BuildServiceProvider().CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+        var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
+        await sut.Should().ThrowAsync<NotImplementedException>();
+
+        _queue.Write(0);
+        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
+
+        var result = _queue.GetValues();
+        result.Should().Equal(Pong1.Id, Pong3.Id, 0);
+    }
 
     public record Ping() : INotification { }
 
@@ -35,53 +71,5 @@ public class SequentialAllTests
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }
-    }
-
-    [Fact]
-    public async Task ExecutesAllHandlersSequentially()
-    {
-        var services = new ServiceCollection();
-        services.AddSingleton(_queue);
-        services.AddExtendedMediatR(x =>
-        {
-            x.RegisterServicesFromAssemblyContaining<Ping>();
-            x.TypeEvaluator = type => type.Name is (nameof(Pong1) or nameof(Pong3));
-        });
-        var provider = services.BuildServiceProvider();
-        using var scope = provider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-        await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
-        _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
-
-        var result = _queue.GetValues();
-        result.Should().HaveCount(3);
-        result[0].Should().Be(Pong1.Id);
-        result[1].Should().Be(Pong3.Id);
-        result[2].Should().Be(0);
-    }
-
-    [Fact]
-    public async Task ContinueOnException()
-    {
-        var services = new ServiceCollection();
-        services.AddSingleton(_queue);
-        services.AddExtendedMediatR(typeof(Ping));
-        var provider = services.BuildServiceProvider();
-        using var scope = provider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-        var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
-        await sut.Should().ThrowAsync<NotImplementedException>();
-
-        _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
-
-        var result = _queue.GetValues();
-        result.Should().HaveCount(3);
-        result[0].Should().Be(Pong1.Id);
-        result[1].Should().Be(Pong3.Id);
-        result[2].Should().Be(0);
     }
 }

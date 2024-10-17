@@ -1,55 +1,8 @@
-﻿using FluentAssertions;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-
-namespace Tests;
+﻿namespace Tests;
 
 public class WhenAllTests
 {
     private readonly TestQueue<int> _queue = new();
-
-    public record Ping() : INotification { }
-
-    public class Pong1(TestQueue<int> queue) : INotificationHandler<Ping>
-    {
-        public const int Id = 1;
-        public async Task Handle(Ping notification, CancellationToken cancellationToken)
-        {
-            queue.Write(Id);
-            await Task.Delay(200, cancellationToken);
-        }
-    }
-    public class Pong2() : INotificationHandler<Ping>
-    {
-        public Task Handle(Ping notification, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
-    }
-    public class Pong3() : INotificationHandler<Ping>
-    {
-        public async Task Handle(Ping notification, CancellationToken cancellationToken)
-        {
-            await Task.Delay(10, cancellationToken);
-            throw new AggregateException(new NotSupportedException(), new Exception());
-        }
-    }
-    public class Pong4() : INotificationHandler<Ping>
-    {
-        public async Task Handle(Ping notification, CancellationToken cancellationToken)
-        {
-            await Task.Delay(20, cancellationToken);
-            throw new TaskCanceledException();
-        }
-    }
-    public class Pong5(TestQueue<int> queue) : INotificationHandler<Ping>
-    {
-        public const int Id = 5;
-        public async Task Handle(Ping notification, CancellationToken cancellationToken)
-        {
-            queue.Write(Id);
-            await Task.Delay(200, cancellationToken);
-        }
-    }
 
     [Fact]
     public async Task ExecutesAllHandlersConcurrently()
@@ -61,19 +14,16 @@ public class WhenAllTests
             x.RegisterServicesFromAssemblyContaining<Ping>();
             x.TypeEvaluator = type => type.Name is (nameof(Pong1) or nameof(Pong5));
         });
-        var provider = services.BuildServiceProvider();
-        using var scope = provider.CreateScope();
+        using var scope = services.BuildServiceProvider().CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.WhenAll);
+
         _queue.Write(0);
         await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
 
         var result = _queue.GetValues();
-        result.Should().HaveCount(3);
-        result[0].Should().Be(Pong1.Id);
-        result[1].Should().Be(Pong5.Id);
-        result[2].Should().Be(0);
+        result.Should().Equal(Pong1.Id, Pong5.Id, 0);
     }
 
     [Fact]
@@ -82,8 +32,7 @@ public class WhenAllTests
         var services = new ServiceCollection();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(typeof(Ping));
-        var provider = services.BuildServiceProvider();
-        using var scope = provider.CreateScope();
+        using var scope = services.BuildServiceProvider().CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.WhenAll);
@@ -92,16 +41,60 @@ public class WhenAllTests
         _queue.Write(0);
         await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
 
-        ex.Which.InnerExceptions.Should().HaveCount(4);
+        ex.Which.InnerExceptions.Should().HaveCount(5);
         ex.Which.InnerExceptions[0].Should().BeOfType<NotImplementedException>();
         ex.Which.InnerExceptions[1].Should().BeOfType<NotSupportedException>();
         ex.Which.InnerExceptions[2].Should().BeOfType<Exception>();
-        ex.Which.InnerExceptions[3].Should().BeOfType<TaskCanceledException>();
+        ex.Which.InnerExceptions[3].Should().BeOfType<Exception>();
+        ex.Which.InnerExceptions[4].Should().BeOfType<TaskCanceledException>();
 
         var result = _queue.GetValues();
-        result.Should().HaveCount(3);
-        result[0].Should().Be(Pong1.Id);
-        result[1].Should().Be(Pong5.Id);
-        result[2].Should().Be(0);
+        result.Should().Equal(Pong1.Id, Pong5.Id, 0);
+    }
+
+    public record Ping() : INotification { }
+
+    public class Pong1(TestQueue<int> queue) : INotificationHandler<Ping>
+    {
+        public const int Id = 1;
+        public async Task Handle(Ping notification, CancellationToken cancellationToken)
+        {
+            await Task.Delay(10, cancellationToken);
+            queue.Write(Id);
+            await Task.Delay(200, cancellationToken);
+        }
+    }
+    public class Pong2() : INotificationHandler<Ping>
+    {
+        public Task Handle(Ping notification, CancellationToken cancellationToken)
+            => throw new NotImplementedException("21");
+    }
+    public class Pong3() : INotificationHandler<Ping>
+    {
+        public async Task Handle(Ping notification, CancellationToken cancellationToken)
+        {
+            await Task.Delay(10, cancellationToken);
+            throw new AggregateException(
+                new NotSupportedException("31"),
+                new AggregateException(new Exception("32"), new Exception("33")));
+        }
+    }
+    public class Pong4() : INotificationHandler<Ping>
+    {
+        public async Task Handle(Ping notification, CancellationToken cancellationToken)
+        {
+            await Task.Delay(30, cancellationToken);
+            throw new TaskCanceledException("41");
+        }
+    }
+    public class Pong5(TestQueue<int> queue) : INotificationHandler<Ping>
+    {
+        public const int Id = 5;
+        public async Task Handle(Ping notification, CancellationToken cancellationToken)
+        {
+            await Task.Delay(30, cancellationToken);
+            queue.Write(Id);
+            await Task.Delay(200, cancellationToken);
+        }
     }
 }
