@@ -24,7 +24,7 @@ builder.Services.AddExtendedMediatR(cfg =>
 });
 ```
 
-It provides an additional extension to `IMediator`/`IPublisher` for publishing a notifications. You may choose a strategy on the fly.
+It provides an additional extension to `IMediator`/`IPublisher` for publishing notifications. You may choose a strategy on the fly.
 
 ```csharp
 public class Foo(IPublisher publisher)
@@ -42,7 +42,7 @@ public class Foo(IPublisher publisher)
 
 ## Publish Strategies
 
-Currently there is a support for the following strategies.
+Currently, there is support for the following strategies.
 
 ```csharp
 public enum PublishStrategy
