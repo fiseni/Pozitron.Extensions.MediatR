@@ -11,13 +11,11 @@ internal class ExtendedMediator(
     private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    private static readonly Dictionary<PublishStrategy, (INotificationPublisher Publisher, bool NoWaitMode)> _publishers = new()
+    private static readonly Dictionary<int, INotificationPublisher> _publishers = new()
     {
-        [PublishStrategy.Sequential] = (new SequentialPublisher(), false),
-        [PublishStrategy.SequentialAll] = (new SequentialAllPublisher(), false),
-        [PublishStrategy.WhenAll] = (new WhenAllPublisher(), false),
-        [PublishStrategy.SequentialAllNoWait] = (new SequentialAllPublisher(), true),
-        [PublishStrategy.WhenAllNoWait] = (new WhenAllPublisher(), true)
+        [(int)PublishStrategy.Sequential] = new SequentialPublisher(),
+        [(int)PublishStrategy.SequentialAll] = new SequentialAllPublisher(),
+        [(int)PublishStrategy.WhenAll] = new WhenAllPublisher(),
     };
 
     public Task Publish<TNotification>(
@@ -26,11 +24,16 @@ internal class ExtendedMediator(
         CancellationToken cancellationToken = default)
         where TNotification : INotification
     {
-        if (_publishers.TryGetValue(strategy, out (INotificationPublisher Publisher, bool NoWaitMode) item))
+        var noWaitMode = (int)strategy > 10;
+        var key = noWaitMode
+            ? (int)strategy - 10
+            : (int)strategy;
+
+        if (_publishers.TryGetValue(key, out var publisher))
         {
-            return item.NoWaitMode
-                ? PublishNoWait(_serviceScopeFactory, notification, item.Publisher, cancellationToken)
-                : Publish(_serviceProvider, notification, item.Publisher, cancellationToken);
+            return noWaitMode
+                ? PublishNoWait(_serviceScopeFactory, notification, publisher, cancellationToken)
+                : Publish(_serviceProvider, notification, publisher, cancellationToken);
         }
 
         return Publish(notification, cancellationToken);
@@ -53,6 +56,7 @@ internal class ExtendedMediator(
         {
             using var scope = serviceScopeFactory.CreateScope();
             var logger = scope.ServiceProvider.GetService<ILogger<ExtendedMediator>>();
+
             try
             {
                 var mediator = new Mediator(scope.ServiceProvider, publisher);
@@ -60,6 +64,7 @@ internal class ExtendedMediator(
             }
             catch (Exception ex)
             {
+                // The aggregate exceptions are already flattened by the publishers.
                 logger?.LogError(ex, "Error occurred while executing the handler in NoWait mode!");
             }
 

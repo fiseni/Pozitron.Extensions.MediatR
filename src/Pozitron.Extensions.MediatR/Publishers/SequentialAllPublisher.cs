@@ -7,7 +7,7 @@ internal class SequentialAllPublisher : INotificationPublisher
         INotification notification,
         CancellationToken cancellationToken)
     {
-        var exceptions = new List<Exception>();
+        List<Exception>? exceptions = null;
 
         foreach (var handlerExecutor in handlerExecutors)
         {
@@ -17,15 +17,15 @@ internal class SequentialAllPublisher : INotificationPublisher
             }
             catch (AggregateException ex)
             {
-                exceptions.AddRange(ex.Flatten().InnerExceptions);
+                (exceptions ??= []).AddRange(ex.Flatten().InnerExceptions);
             }
             catch (Exception ex) when (ex is not (OutOfMemoryException or StackOverflowException))
             {
-                exceptions.Add(ex);
+                (exceptions ??= []).Add(ex);
             }
         }
 
-        if (exceptions.Count != 0)
+        if (exceptions is not null && exceptions.Count != 0)
         {
             throw new AggregateException(exceptions);
         }
