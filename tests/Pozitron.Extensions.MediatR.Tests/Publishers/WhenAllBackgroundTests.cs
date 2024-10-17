@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests;
 
-public class WhenAllNoWaitTests
+public class WhenAllBackgroundTests
 {
     private readonly TestQueue<int> _queue = new();
 
@@ -70,7 +70,7 @@ public class WhenAllNoWaitTests
         using var scope = provider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        await mediator.Publish(new Ping(), PublishStrategy.WhenAllNoWait);
+        await mediator.Publish(new Ping(), PublishStrategy.WhenAllBackground);
         _queue.Write(0);
         await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
 
@@ -93,7 +93,7 @@ public class WhenAllNoWaitTests
         using var scope = provider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        await mediator.Publish(new Ping(), PublishStrategy.WhenAllNoWait);
+        await mediator.Publish(new Ping(), PublishStrategy.WhenAllBackground);
         _queue.Write(0);
         await Task.Delay(300);
 

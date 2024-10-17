@@ -24,15 +24,15 @@ internal class ExtendedMediator(
         CancellationToken cancellationToken = default)
         where TNotification : INotification
     {
-        var noWaitMode = (int)strategy > 10;
-        var key = noWaitMode
+        var isBackgroundTask = (int)strategy > 10;
+        var key = isBackgroundTask
             ? (int)strategy - 10
             : (int)strategy;
 
         if (_publishers.TryGetValue(key, out var publisher))
         {
-            return noWaitMode
-                ? PublishNoWait(_serviceScopeFactory, notification, publisher, cancellationToken)
+            return isBackgroundTask
+                ? PublishBackground(_serviceScopeFactory, notification, publisher, cancellationToken)
                 : Publish(_serviceProvider, notification, publisher, cancellationToken);
         }
 
@@ -46,7 +46,7 @@ internal class ExtendedMediator(
         CancellationToken cancellationToken) where TNotification : INotification
         => new Mediator(serviceProvider, publisher).Publish(notification, cancellationToken);
 
-    private static Task PublishNoWait<TNotification>(
+    private static Task PublishBackground<TNotification>(
         IServiceScopeFactory serviceScopeFactory,
         TNotification notification,
         INotificationPublisher publisher,
@@ -65,7 +65,7 @@ internal class ExtendedMediator(
             catch (Exception ex)
             {
                 // The aggregate exceptions are already flattened by the publishers.
-                logger?.LogError(ex, "Error occurred while executing the handler in NoWait mode!");
+                logger?.LogError(ex, "Error occurred while executing the handler(s) in a background thread!");
             }
 
         }, cancellationToken);
