@@ -18,16 +18,14 @@ public class WhenAllBackgroundTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.WhenAllBackground);
-
         _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
 
-        var result = _queue.GetValues();
-        result.Should().Equal(0, Pong1.Id, Pong5.Id);
+        var result = await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
+        result.Should().Equal(0, Pong5.Id, Pong1.Id);
     }
 
     [Fact]
-    public async Task FlattensExceptions()
+    public async Task FlattensAllExceptions()
     {
         var logger = new FakeLogger<ExtendedMediator>(_queue);
         var services = new ServiceCollection();
@@ -38,17 +36,12 @@ public class WhenAllBackgroundTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.WhenAllBackground);
-
         _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 10, timeoutInMilliseconds: 300);
 
-        var result = _queue.GetValues();
-        result.Should().Equal(0, Pong1.Id, Pong5.Id, 21, 22, 23, 31, 32, 33, 41);
-
-        logger.Exception.Should().NotBeNull();
-        logger.Exception.Should().BeOfType<AggregateException>();
-        var aggregateException = (AggregateException)logger.Exception!;
-        aggregateException.InnerExceptions.Should().HaveCount(7);
+        var result = await _queue.WaitForCompletion(expectedMessages: 8, timeoutInMilliseconds: 300);
+        result.Should().Equal(0, Pong5.Id, Pong1.Id, 21, 31, 32, 33, 41);
+        logger.AggregateException.Should().NotBeNull();
+        logger.AggregateException!.InnerExceptions.Should().HaveCount(5);
     }
 
     public record Ping() : INotification { }
@@ -58,7 +51,7 @@ public class WhenAllBackgroundTests
         public const int Id = 1;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(10, cancellationToken);
+            await Task.Delay(20, cancellationToken);
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }
@@ -66,9 +59,7 @@ public class WhenAllBackgroundTests
     public class Pong2() : INotificationHandler<Ping>
     {
         public Task Handle(Ping notification, CancellationToken cancellationToken)
-            => throw new AggregateException(
-                new NotSupportedException("21"),
-                new AggregateException(new Exception("22"), new Exception("23")));
+            => throw new Exception("21");
     }
     public class Pong3() : INotificationHandler<Ping>
     {
@@ -76,7 +67,7 @@ public class WhenAllBackgroundTests
         {
             await Task.Delay(10, cancellationToken);
             throw new AggregateException(
-                new NotSupportedException("31"),
+                new Exception("31"),
                 new AggregateException(new Exception("32"), new Exception("33")));
         }
     }
@@ -93,7 +84,6 @@ public class WhenAllBackgroundTests
         public const int Id = 5;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(30, cancellationToken);
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }

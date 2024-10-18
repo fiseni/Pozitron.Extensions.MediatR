@@ -13,7 +13,7 @@ public class TestQueue<T>
         _output.Enqueue(value);
     }
 
-    public async Task WaitForCompletion(int expectedMessages, int timeoutInMilliseconds)
+    public async Task<T[]> WaitForCompletion(int expectedMessages, int timeoutInMilliseconds)
     {
         using var cts = new CancellationTokenSource();
         cts.CancelAfter(timeoutInMilliseconds);
@@ -22,5 +22,7 @@ public class TestQueue<T>
         {
             await Task.Delay(10, CancellationToken.None);
         }
+
+        return _output.ToArray();
     }
 }

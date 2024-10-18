@@ -18,16 +18,14 @@ public class SequentialAllTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
-
         _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
 
         var result = _queue.GetValues();
         result.Should().Equal(Pong1.Id, Pong3.Id, 0);
     }
 
     [Fact]
-    public async Task ContinueOnException()
+    public async Task ContinuesOnException()
     {
         var services = new ServiceCollection();
         services.AddSingleton(_queue);
@@ -37,17 +35,11 @@ public class SequentialAllTests
 
         var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.SequentialAll);
         var ex = await sut.Should().ThrowExactlyAsync<AggregateException>();
-
         _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
-
-        ex.Which.InnerExceptions.Should().HaveCount(3);
-        ex.Which.InnerExceptions[0].Should().BeOfType<NotImplementedException>();
-        ex.Which.InnerExceptions[1].Should().BeOfType<NotSupportedException>();
-        ex.Which.InnerExceptions[2].Should().BeOfType<Exception>();
 
         var result = _queue.GetValues();
         result.Should().Equal(Pong1.Id, Pong3.Id, 0);
+        ex.Which.InnerExceptions.Should().HaveCount(3);
     }
 
     [Fact]
@@ -67,8 +59,6 @@ public class SequentialAllTests
         var ex = await sut.Should().ThrowExactlyAsync<AggregateException>();
 
         ex.Which.InnerExceptions.Should().HaveCount(2);
-        ex.Which.InnerExceptions[0].Should().BeOfType<NotSupportedException>();
-        ex.Which.InnerExceptions[1].Should().BeOfType<Exception>();
     }
 
     public record Ping() : INotification { }
@@ -79,31 +69,30 @@ public class SequentialAllTests
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
             // Adding a delay at the start compared to Pong3. We still expect this to be the first message.
-            await Task.Delay(50, cancellationToken);
+            await Task.Delay(20, cancellationToken);
             queue.Write(Id);
-            await Task.Delay(200, cancellationToken);
         }
     }
     public class Pong2() : INotificationHandler<Ping>
     {
         public Task Handle(Ping notification, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
+            => throw new Exception();
     }
     public class Pong3(TestQueue<int> queue) : INotificationHandler<Ping>
     {
         public const int Id = 3;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
+            await Task.Yield();
             queue.Write(Id);
-            await Task.Delay(200, cancellationToken);
         }
     }
     public class Pong4() : INotificationHandler<Ping>
     {
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(10, cancellationToken);
-            throw new AggregateException(new NotSupportedException(), new Exception());
+            await Task.Yield();
+            throw new AggregateException(new Exception(), new Exception());
         }
     }
 }

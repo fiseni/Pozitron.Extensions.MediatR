@@ -18,9 +18,7 @@ public class SequentialTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.Sequential);
-
         _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 500);
 
         var result = _queue.GetValues();
         result.Should().Equal(Pong1.Id, Pong3.Id, 0);
@@ -37,9 +35,7 @@ public class SequentialTests
 
         var sut = async () => await mediator.Publish(new Ping(), PublishStrategy.Sequential);
         await sut.Should().ThrowExactlyAsync<NotImplementedException>();
-
         _queue.Write(0);
-        await _queue.WaitForCompletion(expectedMessages: 2, timeoutInMilliseconds: 500);
 
         var result = _queue.GetValues();
         result.Should().Equal(Pong1.Id, 0);
@@ -53,9 +49,8 @@ public class SequentialTests
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
             // Adding a delay at the start compared to Pong3. We still expect this to be the first message.
-            await Task.Delay(50, cancellationToken);
+            await Task.Delay(20, cancellationToken);
             queue.Write(Id);
-            await Task.Delay(200, cancellationToken);
         }
     }
     public class Pong2() : INotificationHandler<Ping>
@@ -68,8 +63,8 @@ public class SequentialTests
         public const int Id = 3;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
+            await Task.Yield();
             queue.Write(Id);
-            await Task.Delay(200, cancellationToken);
         }
     }
 }
