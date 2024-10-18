@@ -144,7 +144,7 @@ public class WhenAllTests
         public const int Id = 1;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(20, cancellationToken);
+            await Task.Delay(30, cancellationToken);
             queue.Write(Id);
         }
     }

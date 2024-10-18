@@ -51,7 +51,7 @@ public class WhenAllBackgroundTests
         public const int Id = 1;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(20, cancellationToken);
+            await Task.Delay(30, cancellationToken);
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }
@@ -84,6 +84,7 @@ public class WhenAllBackgroundTests
         public const int Id = 5;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
+            await Task.Delay(10, cancellationToken);
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }
