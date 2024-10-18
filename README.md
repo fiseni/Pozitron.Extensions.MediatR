@@ -4,7 +4,7 @@
 
 &nbsp; [![Full Build](https://github.com/fiseni/Pozitron.Extensions.MediatR/actions/workflows/build.yml/badge.svg)](https://github.com/fiseni/Pozitron.Extensions.MediatR/actions/workflows/build.yml)
 
-&nbsp; [![Coverage](https://extensionsmediatr.fiseni.com/badge_combined.svg)](https://extensionsmediatr.fiseni.com)
+&nbsp; [![Coverage](https://extensionsmediatr.fiseni.com/badge_linecoverage.svg)](https://extensionsmediatr.fiseni.com)
 
 ---
 # Pozitron.Extensions.MediatR
