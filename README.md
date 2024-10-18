@@ -12,7 +12,7 @@ A simple library that extends MediatR with various publishing strategies.
 
 ## Usage
 
-Set the MediatorImplementationType to `ExtendedMediator` in the configuration.
+Set the `MediatorImplementationType` to `ExtendedMediator` in the configuration.
 
 ```csharp
 services.AddMediatR(x =>
@@ -24,7 +24,7 @@ services.AddMediatR(x =>
 });
 ```
 
-Alternatively, use the `AddExtendedMediatR` extension. This extension will always set the MediatorImplementationType to ExtendedMediator.
+Alternatively, use the `AddExtendedMediatR` extension. This extension will set the correct type for you.
 ```csharp
 builder.Services.AddExtendedMediatR(cfg =>
 {
@@ -33,7 +33,7 @@ builder.Services.AddExtendedMediatR(cfg =>
 });
 ```
 
-It provides an additional `Publish` extension to `IMediator`/`IPublisher` that accepts a strategy parameter. You may choose a strategy on the fly.
+The library provides an additional `Publish` extension to `IMediator`/`IPublisher` with a strategy parameter. You may choose a strategy on the fly.
 
 ```csharp
 public class Foo(IPublisher publisher)
