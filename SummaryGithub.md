@@ -3,8 +3,8 @@
 
 |||
 |:---|:---|
-| Generated on: | 10/18/2024 - 10:25:22 |
-| Coverage date: | 10/18/2024 - 10:25:20 |
+| Generated on: | 10/18/2024 - 11:01:31 |
+| Coverage date: | 10/18/2024 - 11:01:29 |
 | Parser: | Cobertura |
 | Assemblies: | 1 |
 | Classes: | 5 |
@@ -13,12 +13,12 @@
 | Covered lines: | 102 |
 | Uncovered lines: | 1 |
 | Coverable lines: | 103 |
-| Total lines: | 273 |
+| Total lines: | 344 |
 | **Branch coverage:** | 100% (48 of 48) |
 | Covered branches: | 48 |
 | Total branches: | 48 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 12_11401980594 |
+| Tag: | 15_11402469128 |
 
 </details>
 
