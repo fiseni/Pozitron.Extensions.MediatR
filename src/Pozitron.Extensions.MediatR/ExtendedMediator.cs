@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MediatR;
 
-internal class ExtendedMediator(
+public class ExtendedMediator(
     IServiceScopeFactory serviceScopeFactory,
     IServiceProvider serviceProvider)
     : Mediator(serviceProvider)

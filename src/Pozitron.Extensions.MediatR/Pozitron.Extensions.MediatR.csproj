@@ -19,8 +19,4 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
   
-  <ItemGroup>
-    <InternalsVisibleTo Include="Pozitron.Extensions.MediatR.Tests" />
-  </ItemGroup>
-  
 </Project>

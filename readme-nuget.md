@@ -2,19 +2,28 @@ A simple library that extends MediatR with various publishing strategies.
 
 ## Usage
 
-Register the `ExtendedMediator`.
+Set the MediatorImplementationType to `ExtendedMediator` in the configuration.
 
+```csharp
+services.AddMediatR(x =>
+{
+    x.MediatorImplementationType = typeof(ExtendedMediator);
+
+    // All your desired configuration.
+    x.RegisterServicesFromAssemblyContaining<Ping>();
+});
+```
+
+Alternatively, use the `AddExtendedMediatR` extension. This extension will always set the MediatorImplementationType to ExtendedMediator.
 ```csharp
 builder.Services.AddExtendedMediatR(cfg =>
 {
     // All your desired configuration.
     cfg.RegisterServicesFromAssemblyContaining<Program>();
-	
-    // This extension will always set the MediatorImplementationType to ExtendedMediator.
 });
 ```
 
-It provides an additional extension to `IMediator`/`IPublisher` for publishing notifications. You may choose a strategy on the fly.
+It provides an additional `Publish` extension to `IMediator`/`IPublisher` that accepts a strategy parameter. You may choose a strategy on the fly.
 
 ```csharp
 public class Foo(IPublisher publisher)
