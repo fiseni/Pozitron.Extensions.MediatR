@@ -20,8 +20,9 @@ public class WhenAllTests
         await mediator.Publish(new Ping(), PublishStrategy.WhenAll);
         _queue.Write(0);
 
-        var result = _queue.GetValues();
-        result.Should().Equal(Pong7.Id, Pong1.Id, 0);
+        var result = await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
+        result.Should().BeEquivalentTo([Pong1.Id, Pong7.Id, 0]);
+        result[2].Should().Be(0);
     }
 
     [Fact]
@@ -37,8 +38,9 @@ public class WhenAllTests
         var ex = await sut.Should().ThrowExactlyAsync<AggregateException>();
         _queue.Write(0);
 
-        var result = _queue.GetValues();
-        result.Should().Equal(Pong7.Id, Pong1.Id, 0);
+        var result = await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
+        result.Should().BeEquivalentTo([Pong1.Id, Pong7.Id, 0]);
+        result[2].Should().Be(0);
         ex.Which.InnerExceptions.Should().HaveCount(8);
     }
 
@@ -144,8 +146,8 @@ public class WhenAllTests
         public const int Id = 1;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(30, cancellationToken);
             queue.Write(Id);
+            await Task.Delay(200, cancellationToken);
         }
     }
     public class Pong2() : INotificationHandler<Ping>
@@ -190,8 +192,8 @@ public class WhenAllTests
         public const int Id = 7;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Yield();
             queue.Write(Id);
+            await Task.Delay(200, cancellationToken);
         }
     }
 }

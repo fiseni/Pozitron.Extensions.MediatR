@@ -69,7 +69,7 @@ public class SequentialAllTests
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
             // Adding a delay at the start compared to Pong3. We still expect this to be the first message.
-            await Task.Delay(30, cancellationToken);
+            await Task.Delay(50, cancellationToken);
             queue.Write(Id);
         }
     }

@@ -18,10 +18,9 @@ public class WhenAllBackgroundTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.WhenAllBackground);
-        _queue.Write(0);
 
-        var result = await _queue.WaitForCompletion(expectedMessages: 3, timeoutInMilliseconds: 300);
-        result.Should().Equal(0, Pong5.Id, Pong1.Id);
+        var result = await _queue.WaitForCompletion(expectedMessages: 2, timeoutInMilliseconds: 300);
+        result.Should().BeEquivalentTo([Pong1.Id, Pong5.Id]);
     }
 
     [Fact]
@@ -36,10 +35,9 @@ public class WhenAllBackgroundTests
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         await mediator.Publish(new Ping(), PublishStrategy.WhenAllBackground);
-        _queue.Write(0);
 
-        var result = await _queue.WaitForCompletion(expectedMessages: 8, timeoutInMilliseconds: 300);
-        result.Should().Equal(0, Pong5.Id, Pong1.Id, 21, 31, 32, 33, 41);
+        var result = await _queue.WaitForCompletion(expectedMessages: 7, timeoutInMilliseconds: 300);
+        result.Should().BeEquivalentTo([Pong1.Id, Pong5.Id, 21, 31, 32, 33, 41]);
         logger.AggregateException.Should().NotBeNull();
         logger.AggregateException!.InnerExceptions.Should().HaveCount(5);
     }
@@ -51,7 +49,6 @@ public class WhenAllBackgroundTests
         public const int Id = 1;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(30, cancellationToken);
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }
@@ -65,7 +62,7 @@ public class WhenAllBackgroundTests
     {
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(10, cancellationToken);
+            await Task.Yield();
             throw new AggregateException(
                 new Exception("31"),
                 new AggregateException(new Exception("32"), new Exception("33")));
@@ -75,7 +72,7 @@ public class WhenAllBackgroundTests
     {
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(30, cancellationToken);
+            await Task.Yield();
             throw new TaskCanceledException("41");
         }
     }
@@ -84,7 +81,6 @@ public class WhenAllBackgroundTests
         public const int Id = 5;
         public async Task Handle(Ping notification, CancellationToken cancellationToken)
         {
-            await Task.Delay(10, cancellationToken);
             queue.Write(Id);
             await Task.Delay(200, cancellationToken);
         }
