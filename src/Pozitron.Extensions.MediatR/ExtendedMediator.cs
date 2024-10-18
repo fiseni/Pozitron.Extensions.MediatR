@@ -3,6 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MediatR;
 
+/// <summary>
+/// Extended mediator implementation.
+/// </summary>
+/// <param name="serviceScopeFactory"></param>
+/// <param name="serviceProvider"></param>
 public class ExtendedMediator(
     IServiceScopeFactory serviceScopeFactory,
     IServiceProvider serviceProvider)
@@ -18,6 +23,14 @@ public class ExtendedMediator(
         [(int)PublishStrategy.WhenAll] = new WhenAllPublisher(),
     };
 
+    /// <summary>
+    /// Asynchronously send a notification to multiple handlers using the specified strategy.
+    /// </summary>
+    /// <typeparam name="TNotification"></typeparam>
+    /// <param name="notification">Notification object</param>
+    /// <param name="strategy">Publish strategy</param>
+    /// <param name="cancellationToken">Optional cancellation token</param>
+    /// <returns>A task that represents the publish operation.</returns>
     public Task Publish<TNotification>(
         TNotification notification,
         PublishStrategy strategy,
