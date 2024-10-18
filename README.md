@@ -16,7 +16,7 @@ A simple library that extends MediatR with various publishing strategies.
 Set the `MediatorImplementationType` to `ExtendedMediator` in the configuration.
 
 ```csharp
-services.AddMediatR(x =>
+builder.Services.AddMediatR(x =>
 {
     x.MediatorImplementationType = typeof(ExtendedMediator);
 
