@@ -4,7 +4,7 @@
 
 &nbsp; [![Full Build](https://github.com/fiseni/Pozitron.Extensions.MediatR/actions/workflows/build.yml/badge.svg)](https://github.com/fiseni/Pozitron.Extensions.MediatR/actions/workflows/build.yml)
 
-&nbsp; [![Coverage](https://extensionsmediatr.fiseni.com/badge_linecoverage.svg)](https://extensionsmediatr.fiseni.com)
+&nbsp; [![Coverage](https://extensionsmediatr.fiseni.com/badge_combined.svg)](https://extensionsmediatr.fiseni.com)
 
 ---
 # Pozitron.Extensions.MediatR
@@ -72,7 +72,8 @@ public enum PublishStrategy
     /// <summary>
     /// Executes and awaits each notification handler one after another.
     /// Returns when all handlers complete. It continues on exception(s).
-    /// In case of any exception(s), they will be captured in an AggregateException.
+    /// In case of any exception(s), they will be flattened and captured in an AggregateException.
+    /// The AggregateException will contain all exceptions thrown by all handlers, including OperationCanceled exceptions.
     /// </summary>
     SequentialAll = 2,
 
@@ -93,14 +94,14 @@ public enum PublishStrategy
     /// <summary>
     /// Creates a single new thread using Task.Run(), and returns Task.Completed immediately.
     /// Creates a new scope using IServiceScopeFactory, executes and awaits all handlers sequentially.
-    /// In case of exceptions, they are logged using ILogger<T> (if it's registered in DI).
+    /// In case of exception(s), they are logged using ILogger<T> (if it's registered in DI).
     /// </summary>
     SequentialAllBackground = 12,
 
     /// <summary>
     /// Creates a single new thread using Task.Run(), and returns Task.Completed immediately.
     /// Creates a new scope using IServiceScopeFactory, executes and awaits all handlers using Task.WhenAll.
-    /// In case of exceptions, they are logged using ILogger<T> (if it's registered in DI).
+    /// In case of exception(s), they are logged using ILogger<T> (if it's registered in DI).
     /// </summary>
     WhenAllBackground = 13
 }

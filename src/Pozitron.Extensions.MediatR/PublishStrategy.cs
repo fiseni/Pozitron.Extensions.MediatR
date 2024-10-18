@@ -20,7 +20,8 @@ public enum PublishStrategy
     /// <summary>
     /// Executes and awaits each notification handler one after another.<br/>
     /// Returns when all handlers complete. It continues on exception(s).<br/>
-    /// In case of any exception(s), they will be captured in an AggregateException.<br/>
+    /// In case of any exception(s), they will be flattened and captured in an AggregateException.<br/>
+    /// The AggregateException will contain all exceptions thrown by all handlers, including OperationCanceled exceptions.<br/>
     /// </summary>
     SequentialAll = 2,
 
@@ -41,14 +42,14 @@ public enum PublishStrategy
     /// <summary>
     /// Creates a single new thread using Task.Run(), and returns Task.Completed immediately.<br/>
     /// Creates a new scope using IServiceScopeFactory, executes and awaits all handlers sequentially.<br/>
-    /// In case of exceptions, they are logged using ILogger&lt;T&gt; (if it's registered in DI).<br/>
+    /// In case of exception(s), they are logged using ILogger&lt;T&gt; (if it's registered in DI).<br/>
     /// </summary>
     SequentialAllBackground = 12,
 
     /// <summary>
     /// Creates a single new thread using Task.Run(), and returns Task.Completed immediately.<br/>
     /// Creates a new scope using IServiceScopeFactory, executes and awaits all handlers using Task.WhenAll.<br/>
-    /// In case of exceptions, they are logged using ILogger&lt;T&gt; (if it's registered in DI).<br/>
+    /// In case of exception(s), they are logged using ILogger&lt;T&gt; (if it's registered in DI).<br/>
     /// </summary>
     WhenAllBackground = 13
 }
