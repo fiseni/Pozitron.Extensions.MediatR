@@ -7,6 +7,7 @@
 &nbsp; [![Coverage](https://extensionsmediatr.fiseni.com/badge_combined.svg)](https://extensionsmediatr.fiseni.com)
 
 ---
+# Pozitron.Extensions.MediatR
 
 A simple library that extends MediatR with various publishing strategies.
 
