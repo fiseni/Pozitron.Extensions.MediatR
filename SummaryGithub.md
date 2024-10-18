@@ -3,35 +3,35 @@
 
 |||
 |:---|:---|
-| Generated on: | 10/17/2024 - 23:41:43 |
-| Coverage date: | 10/17/2024 - 23:41:42 |
+| Generated on: | 10/18/2024 - 09:23:19 |
+| Coverage date: | 10/18/2024 - 09:23:17 |
 | Parser: | Cobertura |
 | Assemblies: | 1 |
 | Classes: | 5 |
 | Files: | 5 |
-| **Line coverage:** | 90.2% (93 of 103) |
-| Covered lines: | 93 |
-| Uncovered lines: | 10 |
+| **Line coverage:** | 92.2% (95 of 103) |
+| Covered lines: | 95 |
+| Uncovered lines: | 8 |
 | Coverable lines: | 103 |
 | Total lines: | 273 |
-| **Branch coverage:** | 83.3% (40 of 48) |
-| Covered branches: | 40 |
+| **Branch coverage:** | 95.8% (46 of 48) |
+| Covered branches: | 46 |
 | Total branches: | 48 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 6_11394744163 |
+| Tag: | 7_11401067407 |
 
 </details>
 
 ## Coverage
-<details><summary>Pozitron.Extensions.MediatR - 90.2%</summary>
+<details><summary>Pozitron.Extensions.MediatR - 92.2%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**Pozitron.Extensions.MediatR**|**90.2%**|**83.3%**|
+|**Pozitron.Extensions.MediatR**|**92.2%**|**95.8%**|
 |MediatR.ExtendedMediator|97.2%|83.3%|
 |MediatR.MediatorExtensions|70%|50%|
 |MediatR.SequentialAllPublisher|100%|100%|
 |MediatR.SequentialPublisher|100%|100%|
-|MediatR.WhenAllPublisher|90%|78.5%|
+|MediatR.WhenAllPublisher|96.6%|100%|
 
 </details>

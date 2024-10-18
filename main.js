@@ -225,7 +225,7 @@ var assemblies = [
       { "name": "MediatR.MediatorExtensions", "rp": "Pozitron.Extensions.MediatR_MediatorExtensions.html", "cl": 14, "ucl": 6, "cal": 20, "tl": 78, "cb": 1, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "MediatR.SequentialAllPublisher", "rp": "Pozitron.Extensions.MediatR_SequentialAllPublisher.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 33, "cb": 10, "tb": 10, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "MediatR.SequentialPublisher", "rp": "Pozitron.Extensions.MediatR_SequentialPublisher.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 15, "cb": 2, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "MediatR.WhenAllPublisher", "rp": "Pozitron.Extensions.MediatR_WhenAllPublisher.html", "cl": 27, "ucl": 3, "cal": 30, "tl": 72, "cb": 22, "tb": 28, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "MediatR.WhenAllPublisher", "rp": "Pozitron.Extensions.MediatR_WhenAllPublisher.html", "cl": 29, "ucl": 1, "cal": 30, "tl": 72, "cb": 28, "tb": 28, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -242,7 +242,7 @@ var riskHotspots = [
   {
     "assembly": "Pozitron.Extensions.MediatR", "class": "MediatR.WhenAllPublisher", "reportPath": "Pozitron.Extensions.MediatR_WhenAllPublisher.html", "methodName": "Publish()", "methodShortName": "Publish()", "fileIndex": 0, "line": 10,
     "metrics": [
-      { "value": 28.78, "exceeded": false },
+      { "value": 28.03, "exceeded": false },
       { "value": 28, "exceeded": true },
     ]},
 ];
