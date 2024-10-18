@@ -7,10 +7,10 @@
     <Description>Publishing strategies for MediatR.</Description>
     <Summary>Publishing strategies for MediatR.</Summary>
 
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <PackageTags>fiseni pozitron extensions mediatr mediator</PackageTags>
     <PackageReleaseNotes>
-      Initial Release
+      Fixed XML documentation.
     </PackageReleaseNotes>
   </PropertyGroup>
 
