@@ -9,19 +9,19 @@
 ---
 # Pozitron.Extensions.MediatR
 
-A simple library that extends MediatR with various publishing strategies.
+A simple library that extends MediatR with various publishing strategies. I elaborated on the motivation and implementation details in this [article](https://fiseni.com/posts/mediatr-publishing-strategies/).
 
 ## Usage
 
 Set the `MediatorImplementationType` to `ExtendedMediator` in the configuration.
 
 ```csharp
-builder.Services.AddMediatR(x =>
+builder.Services.AddMediatR(cfg =>
 {
-    x.MediatorImplementationType = typeof(ExtendedMediator);
+    cfg.MediatorImplementationType = typeof(ExtendedMediator);
 
     // All your desired configuration.
-    x.RegisterServicesFromAssemblyContaining<Ping>();
+    cfg.RegisterServicesFromAssemblyContaining<Ping>();
 });
 ```
 
@@ -34,7 +34,7 @@ builder.Services.AddExtendedMediatR(cfg =>
 });
 ```
 
-The library provides an additional `Publish` extension that accepts a strategy as a parameter. You may choose a strategy on the fly.
+The library defines a `Publish` extension that accepts a strategy as a parameter. You may choose a strategy on the fly.
 
 ```csharp
 public class Foo(IMediator mediator)
