@@ -34,18 +34,18 @@ builder.Services.AddExtendedMediatR(cfg =>
 });
 ```
 
-The library provides an additional `Publish` extension to `IMediator`/`IPublisher` with a strategy parameter. You may choose a strategy on the fly.
+The library provides an additional `Publish` extension that accepts a strategy as a parameter. You may choose a strategy on the fly.
 
 ```csharp
-public class Foo(IPublisher publisher)
+public class Foo(IMediator mediator)
 {
     public async Task Run(CancellationToken cancellationToken)
     {
         // The built-in behavior
-        await publisher.Publish(new Ping(), cancellationToken);
+        await mediator.Publish(new Ping(), cancellationToken);
 
         // Publish with specific strategy
-        await publisher.Publish(new Ping(), PublishStrategy.WhenAll, cancellationToken);
+        await mediator.Publish(new Ping(), PublishStrategy.WhenAll, cancellationToken);
     }
 }
 ```
