@@ -19,13 +19,13 @@ internal class SequentialAllPublisher : INotificationPublisher
             {
                 (exceptions ??= []).AddRange(ex.Flatten().InnerExceptions);
             }
-            catch (Exception ex) when (ex is not (OutOfMemoryException or StackOverflowException))
+            catch (Exception ex)
             {
                 (exceptions ??= []).Add(ex);
             }
         }
 
-        if (exceptions is { Count: > 0 })
+        if (exceptions?.Count > 0)
         {
             throw new AggregateException(exceptions);
         }

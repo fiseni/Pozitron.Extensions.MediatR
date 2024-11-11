@@ -64,7 +64,7 @@ internal class WhenAllPublisher : INotificationPublisher
             }
         }
 
-        if (exceptions is { Count: > 0})
+        if (exceptions?.Count > 0)
         {
             throw new AggregateException(exceptions);
         }
