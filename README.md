@@ -11,6 +11,9 @@
 
 A simple library that extends MediatR with various publishing strategies. I elaborated on the motivation and implementation details in this [article](https://fiseni.com/posts/mediatr-publishing-strategies/).
 
+> [!IMPORTANT]  
+> This extension library is published under the MIT license. Please note that starting with version 13.0.0, the [MediatR](https://github.com/LuckyPennySoftware/MediatR) library (which this project extends) has adopted a dual licensing model. For details about MediatR’s licensing and pricing, visit https://mediatr.io.
+
 ## Usage
 
 Set the `MediatorImplementationType` to `ExtendedMediator` in the configuration.
