@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>MediatR</RootNamespace>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -38,9 +38,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../pozitronicon.png" Pack="true" PackagePath="\" />
-    <None Include="../../readme-nuget.md" Pack="true" PackagePath="\" />
-    <None Include="../../LICENSE.txt" Pack="true" PackagePath="\" />
+    <None Include="../../pozitronicon.png" Pack="true" PackagePath="" Visible="false" />
+    <None Include="../../readme-nuget.md" Pack="true" PackagePath="" Visible="false" />
+    <None Include="../../LICENSE.txt" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
 
 </Project>

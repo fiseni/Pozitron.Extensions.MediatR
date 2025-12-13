@@ -8,6 +8,7 @@ public class SequentialTests
     public async Task ExecutesAllHandlersSequentially()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -28,6 +29,7 @@ public class SequentialTests
     public async Task StopsOnException()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(typeof(Ping));
         using var scope = services.BuildServiceProvider().CreateScope();
