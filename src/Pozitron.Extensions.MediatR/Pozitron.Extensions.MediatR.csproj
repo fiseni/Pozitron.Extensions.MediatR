@@ -7,16 +7,16 @@
     <Description>Publishing strategies for MediatR.</Description>
     <Summary>Publishing strategies for MediatR.</Summary>
 
-    <Version>1.0.1</Version>
+    <Version>2.0.0</Version>
     <PackageTags>fiseni pozitron extensions mediatr mediator</PackageTags>
     <PackageReleaseNotes>
-      Fixed XML documentation.
+      - Depend on new version of MediatR, v14.0.0
+      - Align TFM support with MediatR (`netstandard2.0`, `net8.0`, `net9.0`, `net10.0`)
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
   
 </Project>
