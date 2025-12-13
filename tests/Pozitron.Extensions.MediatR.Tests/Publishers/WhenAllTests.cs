@@ -8,6 +8,7 @@ public class WhenAllTests
     public async Task ExecutesAllHandlersConcurrently()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -29,6 +30,7 @@ public class WhenAllTests
     public async Task FlattensAllExceptions()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(typeof(Ping));
         using var scope = services.BuildServiceProvider().CreateScope();
@@ -48,6 +50,7 @@ public class WhenAllTests
     public async Task ImmediateSingleException()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -67,6 +70,7 @@ public class WhenAllTests
     public async Task ImmediateAggregateException()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -86,6 +90,7 @@ public class WhenAllTests
     public async Task SingleException()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -105,6 +110,7 @@ public class WhenAllTests
     public async Task SingleAggregateException()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -124,6 +130,7 @@ public class WhenAllTests
     public async Task TaskCanceledExceptions()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {

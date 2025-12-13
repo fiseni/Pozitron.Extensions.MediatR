@@ -9,6 +9,7 @@ public class ExtendedMediatorTests
     public async Task PublishExtension_ThrowsNotSupported_GivenExtendedMediatorNotRegistered()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddMediatR(x =>
         {
             x.RegisterServicesFromAssemblyContaining<Ping>();
@@ -24,6 +25,7 @@ public class ExtendedMediatorTests
     public async Task Publish_FallsBackToDefault_GivenInvalidStrategy()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(typeof(Ping));
         using var scope = services.BuildServiceProvider().CreateScope();

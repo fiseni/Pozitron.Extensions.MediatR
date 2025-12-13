@@ -8,6 +8,7 @@ public class WhenAllBackgroundTests
     public async Task ExecutesAllHandlersConcurrently()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddExtendedMediatR(x =>
         {
@@ -28,6 +29,7 @@ public class WhenAllBackgroundTests
     {
         var logger = new FakeLogger<ExtendedMediator>(_queue);
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddSingleton(_queue);
         services.AddSingleton(typeof(ILogger<ExtendedMediator>), _ => logger);
         services.AddExtendedMediatR(typeof(Ping));
