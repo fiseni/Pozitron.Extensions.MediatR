@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/release.yml" />
+    <File Path=".gitignore" />
+    <File Path="clean.sh" />
+    <File Path="Directory.Packages.props" />
+    <File Path="exclusion.dic" />
+    <File Path="LICENSE.txt" />
+    <File Path="readme-nuget.md" />
+    <File Path="README.md" />
+    <File Path="run-tests.sh" />
+    <File Path="setup-sqllocaldb.ps1" />
+    <File Path="src/Directory.Build.props" />
+    <File Path="tests/Directory.Build.props" />
+  </Folder>
+  <Project Path="src/Pozitron.Extensions.MediatR/Pozitron.Extensions.MediatR.csproj" />
+  <Project Path="tests/Pozitron.Extensions.MediatR.Tests/Pozitron.Extensions.MediatR.Tests.csproj" />
+</Solution>
