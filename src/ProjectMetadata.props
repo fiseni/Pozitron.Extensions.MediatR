@@ -1,0 +1,18 @@
+<Project>
+
+  <PropertyGroup Label="Project Metadata">
+    <Authors>Fati Iseni</Authors>
+    <Company>Pozitron Group</Company>
+    <Copyright>Copyright © 2026 Pozitron Group</Copyright>
+    <Product>Pozitron Extensions MediatR</Product>
+
+    <PackageProjectUrl>https://github.com/fiseni/Pozitron.Extensions.MediatR</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fiseni/Pozitron.Extensions.MediatR</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>readme-nuget.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+</Project>
