@@ -1,4 +1,4 @@
-<img align="left" src="pozitronlogo.png" width="120" height="120">
+<img align="left" src="logo.png" width="120" height="120">
 
 &nbsp; [![NuGet](https://img.shields.io/nuget/v/Pozitron.Extensions.MediatR.svg)](https://www.nuget.org/packages/Pozitron.Extensions.MediatR)
 
